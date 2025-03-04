@@ -1,0 +1,100 @@
+    .campaign-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+            padding-top: 10%;
+        }
+
+        .campaign-box {
+            width: 300px; /* Set a fixed width for each campaign box */
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out; /* Add a smooth transition for hover effect */
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .campaign-box:hover {
+            transform: translateY(-5px); /* Slight lift on hover */
+        }
+
+        .campaign-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #5ebb9c;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .campaign-description {
+            margin-bottom: 12px;
+            color: #666;
+            line-height: 1.4; /* Improve readability */
+        }
+
+        .goal-amount {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #e74c3c;
+            text-align: center;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #5ebb9c;
+        }
+
+        .campaign-details {
+            font-size: 0.95em; /* Slightly larger detail font */
+            color: #777;
+            margin-bottom: 15px;
+        }
+
+        .campaign-details strong {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .no-campaigns {
+            text-align: center;
+            font-style: italic;
+            color: #888;
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin: 10px 0;
+            height: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: #5ebb9c;
+            border-radius: 10px;
+        }
+
+        .donate-button {
+            background-color: #5ebb9c;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: auto;
+            transition: background-color 0.3s;
+        }
+
+        .donate-button:hover {
+            background-color: #4da98a;
+        }
