@@ -22,7 +22,7 @@
             <a href="home.jsp" >Home</a>
             <a href="about.jsp">About Us</a>
             <a href="contact.jsp" class="active">Contact</a>
-            <a href="campaign.jsp">Campaigns</a>
+            <a href="campaign?action=list">Campaigns</a>
             <a href="donate.jsp" class="donate-btn">Donate Now</a>
              <form action = "LogoutServlet" method = "post">
                          <button type="submit" class="login-btn">Logout</button>

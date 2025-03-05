@@ -11,17 +11,36 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Servlet class for handling user registration requests.
+ */
 @WebServlet("/register")
 public class register extends HttpServlet {
 
+    /**
+     * Service interface for handling registration-related operations.
+     */
     private RegisterService registerService;
 
+    /**
+     * Initializes the servlet and the RegisterService.
+     *
+     * @throws ServletException if the servlet encounters difficulty.
+     */
     @Override
     public void init() throws ServletException {
         // Initialize the service in the init method.  Good practice.
         registerService = new RegisterServiceImpl();
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method for user registration.
+     *
+     * @param req  HttpServletRequest object containing the client's request.
+     * @param resp HttpServletResponse object for sending the response to the client.
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
+     */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 

@@ -9,8 +9,22 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Implementation of the {@link LoginDao} interface, providing data access operations
+ * for user authentication using JDBC.
+ */
 public class LoginDaoImp implements LoginDao {
 
+    /**
+     * Authenticates a user based on the provided email and password by querying both the
+     * 'admin' and 'users' tables.
+     *
+     * @param email    The email address of the user.
+     * @param password The password of the user.
+     * @return The {@link Users} object if authentication is successful (found in either table),
+     *         {@code null} otherwise.
+     * @throws SQLException If a database error occurs during the operation.
+     */
     @Override
     public Users authenticateUser(String email, String password) throws SQLException {
         Users user = null;

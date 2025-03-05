@@ -29,11 +29,7 @@
 <nav class="navbar">
           <div class="logo">Care<span>Foundation</span></div>
           <div class="nav-links">
-              <a href="home.jsp">Home</a>
-              <a href="about.jsp">About Us</a>
-              <a href="contact.jsp" >Contact</a>
-              <a class="active">Campaigns</a>
-              <a href="donate.jsp" class="donate-btn">Donate Now</a>
+
                 <form action = "LogoutServlet" method = "post">
                             <button type="submit" class="login-btn">Logout</button>
                             </form>

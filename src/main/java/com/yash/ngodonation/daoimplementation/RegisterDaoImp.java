@@ -7,8 +7,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+/**
+ * Implementation of the {@link RegisterDao} interface, providing data access operations
+ * for registering new donors using JDBC.
+ */
 public class RegisterDaoImp implements RegisterDao {
 
+    /**
+     * Registers a new donor in the database.
+     *
+     * @param name     The name of the donor.
+     * @param email    The email address of the donor.
+     * @param phone    The phone number of the donor.
+     * @param password The password for the donor's account.
+     * @return {@code true} if the donor was successfully registered, {@code false} otherwise.
+     * @throws SQLException If a database error occurs during the operation.
+     */
     @Override
     public boolean registerDonor(String name, String email, String phone, String password) throws SQLException {
         Connection connection = null;

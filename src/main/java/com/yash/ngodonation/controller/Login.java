@@ -1,4 +1,3 @@
-
 package com.yash.ngodonation.controller;
 
 import com.yash.ngodonation.domain.Users;
@@ -14,16 +13,34 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Servlet class for handling user login requests.
+ */
 @WebServlet("/login")
 public class Login extends HttpServlet {
 
+    /**
+     * Service interface for handling login-related operations.
+     */
     private LoginService loginService;
 
+    /**
+     * Initializes the servlet and LoginService
+     * @throws ServletException if the servlet encounters difficulty
+     */
     @Override
     public void init() throws ServletException {
         loginService = new LoginServiceImpl(); // Or inject the service
     }
 
+    /**
+     * Handles the HTTP <code>POST</code> method for user login.
+     *
+     * @param request  HttpServletRequest object containing the client's request.
+     * @param response HttpServletResponse object for sending the response to the client.
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException      if an I/O error occurs
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
