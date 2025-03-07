@@ -7,8 +7,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="login.css">
 </head>
-
-
 <body>
  <nav class="navbar">
         <div class="logo">Care<span>Foundation</span></div>
@@ -20,7 +18,6 @@
             <a href="donate.jsp"class="active" class="donate-btn">Donate Now</a>
             <button onclick="window.location.href='login.jsp'" class="login-btn">Login</button> --%>
 
-
         </div>
         <div class="hamburger">
             <span></span>
@@ -29,6 +26,21 @@
         </div>
  </nav>
     <div class="container">
+
+    <!-- Error Message -->
+    <% if (request.getAttribute("error") != null) { %>
+    <div class="error-message">
+        <%= request.getAttribute("error") %>
+    </div>
+     <% } %>
+
+    <!-- Success message -->
+    <% if (session.getAttribute("message") != null) { %>
+    <div class="success-message">
+            <%= session.getAttribute("message") %>
+            <% session.removeAttribute("message"); %>
+        </div>
+       <% } %>
         <div class="card">
             <div class="logo-container">
 

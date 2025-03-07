@@ -22,7 +22,7 @@
             <a href="index.jsp" >Home</a>
             <a href="about.jsp">About Us</a>
             <a href="contact.jsp">Contact</a>
-            <a href="campaigns.jsp">Campaigns</a>
+            <a href="campaign?action=list">Campaigns</a>
             <a href="donate.jsp"class="active" class="donate-btn">Donate Now</a>
             <button onclick="window.location.href='login.jsp'" class="login-btn">Login</button>
         </div>
@@ -69,11 +69,11 @@
         <div class="form-step" id="step2">
             <h2>Select Amount</h2>
             <div class="amount-options">
-                <button class="amount-btn" data-amount="100">₹100</button>
-                <button class="amount-btn" data-amount="500">₹500</button>
-                <button class="amount-btn" data-amount="1000">₹1000</button>
-                <button class="amount-btn" data-amount="2000">₹2000</button>
-                <button class="amount-btn" data-amount="5000">₹5000</button>
+                <button class="amount-btn" data-amount="100">100</button>
+                <button class="amount-btn" data-amount="500">500</button>
+                <button class="amount-btn" data-amount="1000">1000</button>
+                <button class="amount-btn" data-amount="2000">2000</button>
+                <button class="amount-btn" data-amount="5000">5000</button>
                 <button class="amount-btn" data-amount="custom">Custom</button>
             </div>
             <div class="custom-amount form-group">

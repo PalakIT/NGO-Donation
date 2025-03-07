@@ -121,33 +121,9 @@
             </div>
         </section>
     </main>
+       <div class="F">
+       <jsp:include page="includes/footer.jsp"/>
+       </div>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-section">
-                <h3>Contact Us</h3>
-                <p>Email: info@carefoundation.org</p>
-                <p>Phone: +1 (555) 123-4567</p>
-                <p>Address: 123 Charity Lane, Helping City</p>
-            </div>
-            <div class="footer-section">
-                <h3>Quick Links</h3>
-                <a href="about.jsp">About Us</a>
-                <a href="about.jsp">Our Programs</a>
-                <a href="donate.jsp">Donate</a>
-                <a href="contact.jsp">Contact</a>
-            </div>
-            <div class="footer-section">
-                <h3>Newsletter</h3>
-                <form class="newsletter-form">
-                    <input type="email" placeholder="Enter your email">
-                    <button type="submit">Subscribe</button>
-                </form>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2025 Care Foundation. All rights reserved.</p>
-        </div>
-    </footer>
 </body>
 </html>

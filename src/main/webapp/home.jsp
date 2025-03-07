@@ -140,7 +140,7 @@
                             <h3>Select Amount</h3>
                             <div class="amount-options">
                                 <button class="amount-btn"> ₹ 1000</button>
-                                <button class="amount-btn"> ₹ 2000</button>
+
                                 <button class="amount-btn active"> ₹ 5000</button>
                                 <button class="amount-btn"> ₹ 10000</button>
                                 <input type="number" placeholder="Custom Amount" class="custom-amount">
@@ -174,7 +174,7 @@
                                         <option value="covid">COVID Relief</option>
                                     </select>
                                 </div>
-                                <button type="submit" onclick="window.location.href='login.jsp'" class="donate-submit-btn">Proceed to Pay</button>
+                                <button type="submit" onclick="window.location.href='donate.jsp'" class="donate-submit-btn">Proceed to Pay</button>
                             </form>
                         </div>
                     </div>

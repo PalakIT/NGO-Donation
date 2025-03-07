@@ -8,7 +8,7 @@
 <%@ page import="java.math.BigDecimal" %>
 
 <%
-    if(session.getAttribute("email") == null){
+    if(session.getAttribute("id") == null){
     response.sendRedirect("login.jsp");
     return;
     }
@@ -19,27 +19,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NGO Admin Dashboard</title>
-     <link rel="stylesheet" href="style.css">
-      <link rel="stylesheet" href="admin.css">
+    <title>Care Foundation Admin Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
-<nav class="navbar">
-          <div class="logo">Care<span>Foundation</span></div>
-          <div class="nav-links">
-
-                <form action = "LogoutServlet" method = "post">
-                            <button type="submit" class="login-btn">Logout</button>
-                            </form>
-          </div>
-          <div class="hamburger">
-              <span></span>
-              <span></span>
-              <span></span>
-          </div>
-      </nav>
 <%
     // Initialize DAO
     CampaignDaoImp campaignDao = new CampaignDaoImp();
@@ -86,8 +72,14 @@
     }
 
     String campaignsSectionDisplay = "none";
-    if(request.getParameter("showSection")!=null && request.getParameter("showSection").equals("campaigns")){
-        campaignsSectionDisplay ="block";
+    String donationsSectionDisplay = "none";
+
+    if(request.getParameter("showSection")!=null) {
+        if(request.getParameter("showSection").equals("campaigns")) {
+            campaignsSectionDisplay = "block";
+        } else if(request.getParameter("showSection").equals("donations")) {
+            donationsSectionDisplay = "block";
+        }
     }
 
     String campaignFormDisplay = request.getParameter("campaignFormDisplay") != null ? "block" : "none";
@@ -99,35 +91,58 @@
     } catch (Exception e) {
         e.printStackTrace();
     }
+
+    // Count active campaigns
+    int activeCampaigns = 0;
+    int completedCampaigns = 0;
+    BigDecimal totalCollected = BigDecimal.ZERO;
+
+    if (campaigns != null) {
+        for(Campaigns campaign : campaigns) {
+            if("active".equals(campaign.getStatus())) {
+                activeCampaigns++;
+            } else if("completed".equals(campaign.getStatus())) {
+                completedCampaigns++;
+            }
+            totalCollected = totalCollected.add(campaign.getCollectedAmount());
+        }
+    }
 %>
+
+<!-- Modern Navbar -->
+<nav class="navbar">
+    <div class="logo">
+        Care<span>Foundation</span>
+    </div>
+    <div class="nav-links">
+        <form action="LogoutServlet" method="post">
+            <button type="submit" class="login-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </form>
+    </div>
+</nav>
+
 <div class="dashboard">
-    <!-- Sidebar -->
+    <!-- Sidebar with Icons -->
     <div class="sidebar">
         <ul class="nav-menu">
             <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-home"></i>
+                <a href="admin.jsp" class="nav-link <%= (request.getParameter("showSection") == null) ? "active" : "" %>">
+                    <i class="fas fa-tachometer-alt"></i>
                     Dashboard
                 </a>
             </li>
-
             <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-hand-holding-heart"></i>
+                <a href="?showSection=donations" class="nav-link <%= donationsSectionDisplay.equals("block") ? "active" : "" %>">
+                    <i class="fas fa-hand-holding-usd"></i>
                     Donations
                 </a>
             </li>
             <li class="nav-item">
-                <a href="?showSection=campaigns" class="nav-link">
+                <a href="?showSection=campaigns" class="nav-link <%= campaignsSectionDisplay.equals("block") ? "active" : "" %>">
                     <i class="fas fa-bullhorn"></i>
                     Campaigns
-                </a>
-            </li>
-
-            <li class="nav-item">
-                <a href="#" class="nav-link">
-                    <i class="fas fa-cog"></i>
-                    Settings
                 </a>
             </li>
         </ul>
@@ -135,129 +150,218 @@
 
     <!-- Main Content -->
     <div class="main">
-        <div class="header">
-            <h1>Dashboard Overview</h1>
-        </div>
-
-        <!-- Stats Cards -->
+        <!-- Enhanced Stats Cards -->
         <div class="stats-grid">
-            <div class="stat-card">
+            <a href="?showSection=donations" class="stat-card" style="text-decoration: none; color: inherit;">
                 <h3>Total Donations</h3>
-                <div class="stat-value">8,45,000</div>
-                <p>+15% this month</p>
-            </div>
-            <div class="stat-card">
+                <div class="stat-value">₹ <%= String.format("%,.2f", totalCollected) %></div>
+                <div class="mt-2"><i class="fas fa-arrow-right"></i> View details</div>
+            </a>
+            <a href="donors.jsp" class="stat-card" style="text-decoration: none; color: inherit;">
                 <h3>Active Donors</h3>
                 <div class="stat-value">256</div>
-                <p>+12 new donors</p>
-            </div>
-            <div class="stat-card">
+                <div class="mt-2"><i class="fas fa-arrow-right"></i> View donors</div>
+            </a>
+            <a href="?showSection=campaigns&activeOnly=true" class="stat-card" style="text-decoration: none; color: inherit;">
                 <h3>Active Campaigns</h3>
-                <div class="stat-value">8</div>
-                <p>3 ending soon</p>
-            </div>
-            <div class="stat-card">
-                <h3>Pending Verifications</h3>
-                <div class="stat-value">15</div>
-                <p>5 new requests</p>
+                <div class="stat-value"><%= activeCampaigns %></div>
+                <div class="mt-2"><i class="fas fa-arrow-right"></i> View active campaigns</div>
+            </a>
+            <a href="?showSection=campaigns&completedOnly=true" class="stat-card" style="text-decoration: none; color: inherit;">
+                <h3>Completed Campaigns</h3>
+                <div class="stat-value"><%= completedCampaigns %></div>
+                <div class="mt-2"><i class="fas fa-arrow-right"></i> View completed campaigns</div>
+            </a>
+        </div>
+
+        <!-- Donations Section -->
+        <div class="section fade-in" id="donationsSection" style="display:<%= donationsSectionDisplay %>;">
+            <div class="section-title">
+                <i class="fas fa-hand-holding-usd"></i> Donation Management
             </div>
         </div>
 
         <!-- Campaign Section -->
-        <div class="section" id="campaignsSection" style="display:<%=campaignsSectionDisplay%>;">
-            <h2 class="section-title">Campaign Management</h2>
-            <button class="btn" onclick="document.getElementById('campaignForm').style.display='block'">Create New Campaign</button>
+        <div class="section fade-in" id="campaignsSection" style="display:<%= campaignsSectionDisplay %>;">
+            <div class="section-title">
+                <i class="fas fa-bullhorn"></i> Campaign Management
+            </div>
 
-            <!-- Campaign Form -->
-            <div id="campaignForm" class="hidden" style="display: <%=campaignFormDisplay%>">
-                <h3>Create/Edit Campaign</h3>
+            <!-- Create Button -->
+            <button class="btn" onclick="document.getElementById('campaignForm').style.display='block'">
+                <i class="fas fa-plus"></i> Create New Campaign
+            </button>
+
+            <!-- Enhanced Campaign Form -->
+            <div id="campaignForm" class="form-container hidden" style="display: <%= campaignFormDisplay %>">
+                <h3 class="form-title">
+                    <%= (request.getParameter("editCampaignId") != null) ? "Edit Campaign" : "Create New Campaign" %>
+                </h3>
                 <form action="admin.jsp" method="post" id="campaignFormInner">
-                    <input type="hidden" name="action" value="<%=(request.getParameter("editCampaignId") != null) ? "update" : "create"%>"/>
-                    <div class="form-group">
-                        <label for="campaignId">Campaign ID (for Edit):</label>
-                        <input type="number" id="campaignId" name="campaignId" value="<%= (request.getParameter("editCampaignId") != null) ? request.getParameter("editCampaignId") : ""%>" readonly placeholder="Leave blank for new">
-                    </div>
-                    <div class="form-group">
-                        <label for="title">Title:</label>
-                        <input type="text" id="title" name="title" value="<%= (request.getParameter("titleEdit") != null) ? request.getParameter("titleEdit") : ""%>" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description:</label>
-                        <textarea id="description" name="description" required><%= (request.getParameter("descriptionEdit") != null) ? request.getParameter("descriptionEdit") : ""%></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="goalAmount">Goal Amount:</label>
-                        <input type="number" id="goalAmount" name="goalAmount" step="0.01" value="<%= (request.getParameter("goalAmountEdit") != null) ? request.getParameter("goalAmountEdit") : ""%>" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="collectedAmount">Collected Amount:</label>
-                        <input type="number" id="collectedAmount" name="collectedAmount" step="0.01" value="<%= (request.getParameter("collectedAmountEdit") != null) ? request.getParameter("collectedAmountEdit") : ""%>" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="startDate">Start Date:</label>
-                        <input type="date" id="startDate" name="startDate" value="<%= (request.getParameter("startDateEdit") != null) ? request.getParameter("startDateEdit") : ""%>" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="endDate">End Date:</label>
-                        <input type="date" id="endDate" name="endDate" value="<%= (request.getParameter("endDateEdit") != null) ? request.getParameter("endDateEdit") : ""%>" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Status:</label>
-                        <select id="status" name="status">
-                            <option value="active" <% if ("active".equals(request.getParameter("statusEdit"))) { %> selected <% } %>>Active</option>
-                            <option value="completed" <% if ("completed".equals(request.getParameter("statusEdit"))) { %> selected <% } %>>Completed</option>
-                        </select>
+                    <input type="hidden" name="action" value="<%= (request.getParameter("editCampaignId") != null) ? "update" : "create" %>"/>
+                    <input type="hidden" name="showSection" value="campaigns"/>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="campaignId">Campaign ID:</label>
+                            <input type="number" id="campaignId" name="campaignId" class="form-control"
+                                value="<%= (request.getParameter("editCampaignId") != null) ? request.getParameter("editCampaignId") : "" %>"
+                                readonly <%= (request.getParameter("editCampaignId") == null) ? "placeholder='Auto-generated'" : "" %>>
+                        </div>
+                        <div class="form-group">
+                            <label for="title">Campaign Title:</label>
+                            <input type="text" id="title" name="title" class="form-control"
+                                value="<%= (request.getParameter("titleEdit") != null) ? request.getParameter("titleEdit") : "" %>"
+                                required placeholder="Enter campaign title">
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label for="description">Description:</label>
+                            <textarea id="description" name="description" class="form-control" rows="4" required
+                                placeholder="Provide detailed campaign description"><%= (request.getParameter("descriptionEdit") != null) ? request.getParameter("descriptionEdit") : "" %></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="goalAmount">Goal Amount (₹):</label>
+                            <input type="number" id="goalAmount" name="goalAmount" step="0.01" class="form-control"
+                                value="<%= (request.getParameter("goalAmountEdit") != null) ? request.getParameter("goalAmountEdit") : "" %>"
+                                required placeholder="Enter target amount">
+                        </div>
+                        <div class="form-group">
+                            <label for="collectedAmount">Collected Amount (₹):</label>
+                            <input type="number" id="collectedAmount" name="collectedAmount" step="0.01" class="form-control"
+                                value="<%= (request.getParameter("collectedAmountEdit") != null) ? request.getParameter("collectedAmountEdit") : "0" %>"
+                                required placeholder="Enter current amount">
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start Date:</label>
+                            <input type="date" id="startDate" name="startDate" class="form-control"
+                                value="<%= (request.getParameter("startDateEdit") != null) ? request.getParameter("startDateEdit") : "" %>"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date:</label>
+                            <input type="date" id="endDate" name="endDate" class="form-control"
+                                value="<%= (request.getParameter("endDateEdit") != null) ? request.getParameter("endDateEdit") : "" %>"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status:</label>
+                            <select id="status" name="status" class="form-control">
+                                <option value="active" <%= "active".equals(request.getParameter("statusEdit")) ? "selected" : "" %>>Active</option>
+                                <option value="completed" <%= "completed".equals(request.getParameter("statusEdit")) ? "selected" : "" %>>Completed</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="form-actions">
-                        <button type="submit" class="btn btn-success">Save Campaign</button>
-                        <button type="button" class="btn btn-warning" onclick="document.getElementById('campaignForm').style.display='none'">Cancel</button>
+                        <button type="button" class="btn btn-warning" onclick="document.getElementById('campaignForm').style.display='none'">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i> <%= (request.getParameter("editCampaignId") != null) ? "Update" : "Create" %> Campaign
+                        </button>
                     </div>
                 </form>
             </div>
 
-            <!-- Campaign Listing -->
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Goal</th>
-                    <th>Collected Amount</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                <% if (campaigns != null && !campaigns.isEmpty()) {
-                    for (Campaigns campaign : campaigns) { %>
-                <tr>
-                    <td><%= campaign.getId() %></td>
-                    <td><%= campaign.getTitle() %></td>
-                    <td><%= campaign.getGoalAmount() %></td>
-                    <td><%= campaign.getCollectedAmount() %></td>
-                    <td><%= dateFormat.format(campaign.getStartDate()) %></td>
-                    <td><%= dateFormat.format(campaign.getEndDate()) %></td>
-                    <td><%= campaign.getStatus() %></td>
-                    <td>
-                        <a href="?showSection=campaigns&editCampaignId=<%= campaign.getId() %>&titleEdit=<%= campaign.getTitle() %>&descriptionEdit=<%= campaign.getDescription() %>&goalAmountEdit=<%= campaign.getGoalAmount() %>&collectedAmountEdit=<%=campaign.getCollectedAmount()%>&startDateEdit=<%= dateFormat.format(campaign.getStartDate()) %>&endDateEdit=<%= dateFormat.format(campaign.getEndDate()) %>&statusEdit=<%= campaign.getStatus() %>&campaignFormDisplay=block">Edit</a>
-                        <a href="?action=delete&campaignId=<%= campaign.getId() %>">Delete</a>
-                    </td>
-                </tr>
-                <% }
-                } else { %>
-                <tr>
-                    <td colspan="8">No campaigns found.</td>
-                </tr>
-                <% } %>
-                </tbody>
-            </table>
+            <!-- Enhanced Campaign Listing -->
+            <div class="table-container mt-4">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Campaign Title</th>
+                            <th>Progress</th>
+                            <th>Timeline</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%
+                        if (campaigns != null && !campaigns.isEmpty()) {
+                            for (Campaigns campaign : campaigns) {
+                                // Filter by status if requested
+                                if (("true".equals(request.getParameter("activeOnly")) && !"active".equals(campaign.getStatus())) ||
+                                    ("true".equals(request.getParameter("completedOnly")) && !"completed".equals(campaign.getStatus()))) {
+                                    continue;
+                                }
+
+                                // Calculate progress percentage
+                                BigDecimal goalAmount = campaign.getGoalAmount();
+                                BigDecimal collectedAmount = campaign.getCollectedAmount();
+                                int progressPercentage = 0;
+                                if (goalAmount.compareTo(BigDecimal.ZERO) > 0) {
+                                    progressPercentage = collectedAmount.multiply(new BigDecimal(100)).divide(goalAmount, 0, BigDecimal.ROUND_HALF_UP).intValue();
+                                }
+                        %>
+                        <tr>
+                            <td><%= campaign.getId() %></td>
+                            <td>
+                                <strong><%= campaign.getTitle() %></strong>
+                                <div class="text-muted mt-1" style="font-size: 12px;">Goal: ₹ <%= String.format("%,.2f", campaign.getGoalAmount()) %></div>
+                            </td>
+                            <td>
+                                <div>₹ <%= String.format("%,.2f", campaign.getCollectedAmount()) %> raised</div>
+                                <div class="progress-container">
+                                    <div class="progress-bar" style="width: <%= progressPercentage %>%;"></div>
+                                </div>
+                                <div style="font-size: 12px;"><%= progressPercentage %>% of goal</div>
+                            </td>
+                            <td>
+                                <div><i class="fas fa-calendar-day"></i> <%= dateFormat.format(campaign.getStartDate()) %></div>
+                                <div><i class="fas fa-calendar-check"></i> <%= dateFormat.format(campaign.getEndDate()) %></div>
+                            </td>
+                            <td>
+                                <span class="badge <%= "active".equals(campaign.getStatus()) ? "badge-success" : "badge-warning" %>">
+                                    <%= "active".equals(campaign.getStatus()) ? "Active" : "Completed" %>
+                                </span>
+                            </td>
+                            <td class="actions">
+                                <a href="?showSection=campaigns&campaignFormDisplay=true&editCampaignId=<%= campaign.getId() %>&titleEdit=<%= campaign.getTitle() %>&descriptionEdit=<%= campaign.getDescription() %>&goalAmountEdit=<%= campaign.getGoalAmount() %>&collectedAmountEdit=<%= campaign.getCollectedAmount() %>&startDateEdit=<%= dateFormat.format(campaign.getStartDate()) %>&endDateEdit=<%= dateFormat.format(campaign.getEndDate()) %>&statusEdit=<%= campaign.getStatus() %>" class="action-btn edit-btn">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="?showSection=campaigns&action=delete&campaignId=<%= campaign.getId() %>" class="action-btn delete-btn" onclick="return confirm('Are you sure you want to delete this campaign?');">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <%
+                            }
+                        } else {
+                        %>
+                        <tr>
+                            <td colspan="6" style="text-align: center;">No campaigns found</td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-
     </div>
 </div>
-<jsp:include page="includes/footer.jsp"/>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add animation classes for page elements
+        setTimeout(function() {
+            document.querySelectorAll('.stats-grid .stat-card').forEach(function(card, index) {
+                setTimeout(function() {
+                    card.classList.add('animate');
+                }, index * 100);
+            });
+        }, 200);
+
+        // Form validation for date inputs
+        const startDateInput = document.getElementById('startDate');
+        const endDateInput = document.getElementById('endDate');
+
+        if(startDateInput && endDateInput) {
+            endDateInput.addEventListener('change', function() {
+                if(startDateInput.value && new Date(endDateInput.value) < new Date(startDateInput.value)) {
+                    alert('End date cannot be earlier than start date');
+                    endDateInput.value = '';
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>

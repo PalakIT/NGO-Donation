@@ -1,9 +1,7 @@
 package com.yash.ngodonation.controller;
-
 import com.yash.ngodonation.domain.Users;
 import com.yash.ngodonation.service.LoginService;
 import com.yash.ngodonation.serviceimplementation.LoginServiceImpl;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
@@ -30,7 +28,7 @@ public class Login extends HttpServlet {
      */
     @Override
     public void init() throws ServletException {
-        loginService = new LoginServiceImpl(); // Or inject the service
+        loginService = new LoginServiceImpl();
     }
 
     /**
@@ -61,14 +59,14 @@ public class Login extends HttpServlet {
                 //Setting secure and HttpOnly to prevent attack at Cookies
                 Cookie sessionCookie = new Cookie("JSESSIONID", session.getId());
                 sessionCookie.setHttpOnly(true);
-                sessionCookie.setSecure(true);  //Only transmit this cookie over HTTPS
+                sessionCookie.setSecure(true);
                 response.addCookie(sessionCookie);
 
 
                 if (authenticatedUser.getPhone() == null) {
-                    response.sendRedirect("admin.jsp"); // Admin login if phone is null
+                    response.sendRedirect("admin.jsp");
                 } else {
-                    response.sendRedirect("home.jsp"); // User login
+                    response.sendRedirect("home.jsp");
                 }
             } else {
                 // Login failed

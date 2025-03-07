@@ -9,6 +9,22 @@ body {
     background: #f0f2f5;
     min-height: 100vh;
 }
+.error-message{
+background-color:#ffe6e6;
+color: #ff0000;
+margin-bottom: 15px;
+border-radius: 4px;
+text-align:center;
+
+}
+.success-message{
+background-color:#e6ffe6;
+color: #006600;
+padding: 10px;
+margin-bottom:15px;
+border-radius: 4px;
+text-align:center;
+}
 
 .container {
     width: 100%;
