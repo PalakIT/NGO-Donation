@@ -157,7 +157,7 @@
                 <div class="stat-value">₹ <%= String.format("%,.2f", totalCollected) %></div>
                 <div class="mt-2"><i class="fas fa-arrow-right"></i> View details</div>
             </a>
-            <a href="donors.jsp" class="stat-card" style="text-decoration: none; color: inherit;">
+            <a class="stat-card" style="text-decoration: none; color: inherit;">
                 <h3>Active Donors</h3>
                 <div class="stat-value">256</div>
                 <div class="mt-2"><i class="fas fa-arrow-right"></i> View donors</div>
